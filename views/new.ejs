@@ -1,0 +1,48 @@
+<% include ./partials/header %>
+
+<div class="container">
+    <h1>New Post</h1>
+    <form action="/myjournal" method="POST">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputTitle">Title</label>
+                <input type="text" class="form-control" id="title" placeholder="title" name="title">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="date">Date</label>
+                <input type="date" class="form-control" id="date" placeholder="date" name="date">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="flyType">Fly Type</label>
+                <select id="flyType" class="form-control" name="flyType">
+                    <option selected>Dry Fly</option>
+                    <option>Wet Fly</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="flyBreed">Fly Breed</label>
+                <input type="text" class="form-control" id="flyBreed" placeholder="fly breed" name="flyBreed">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="location">Location</label>
+                <input type="text" class="form-control" id="location" placeholder="location" name="location">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="image">Image URL</label>
+                <input type="text" class="form-control" id="image" placeholder="image url"  name="image">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" rows="5" name="description"></textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<% include ./partials/footer %>

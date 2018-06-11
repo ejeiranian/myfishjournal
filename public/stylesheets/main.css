@@ -1,0 +1,13 @@
+.card {
+ line-height: 1;
+ max-width:319px;
+ text-align:center;
+ display:inline-block;
+ padding:0px;
+}
+.card-img-top {
+    max-height:219px;
+}
+.navbar {
+    margin-bottom:25px;
+}
