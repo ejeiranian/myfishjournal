@@ -3,15 +3,20 @@
     <a href="/myjournal/new" class="btn  btn-primary">Create New</a>
 </div>
 <div class="container">
-    <div class="card-columns">
-        <% entry.forEach(function(entry) { %>
-            <div class="card col-sm-2">
-                <img class="card-img-top" src = "<%=entry.image%>">
-                <div class="card-body">
-                    <h5 class="card-title"><%= entry.title %></h5>
-                    <p class="card-subtitle mb-2 text-muted"><%= entry.date %></p>
-                    <p class="card-text"><%= entry.location %></p>
-                    <a href="/myjournal/<%=entry._id%>" class="btn btn-primary">Read Entry</a>
+    <div class="row" style="display:flex; flex-wrap:wrap;">
+         <% entry.forEach(function(entry) { %>
+            <div class="col-md-4 col-sm-6" style="margin-bottom:25px;">
+                <div>
+                    <img src="<%=entry.image%>" class="img-thumbnail">
+                    <div class="text-center" id="captions">
+                        <h5><%=entry.title%></h5>
+                        <p class="text-center text-muted font-italic">
+                        <%=entry.date%>
+                        </p>
+                    </div>
+                    <div class="text-center">
+                         <a href="/myjournal/<%=entry._id%>" class="btn btn-info">Read Entry</a>
+                    </div>
                 </div>
             </div>
         <% }); %>
