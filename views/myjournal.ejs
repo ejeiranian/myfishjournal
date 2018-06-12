@@ -6,7 +6,7 @@
     <div class="row" style="display:flex; flex-wrap:wrap;">
          <% entry.forEach(function(entry) { %>
             <div class="col-md-4 col-sm-6" style="margin-bottom:25px;">
-                <div>
+                <div class="border">
                     <img src="<%=entry.image%>" class="img-thumbnail">
                     <div class="text-center" id="captions">
                         <h5><%=entry.title%></h5>
@@ -15,7 +15,7 @@
                         </p>
                     </div>
                     <div class="text-center">
-                         <a href="/myjournal/<%=entry._id%>" class="btn btn-info">Read Entry</a>
+                         <a href="/myjournal/<%=entry._id%>" class="btn btn-info" id="readbtn">Read Entry</a>
                     </div>
                 </div>
             </div>
