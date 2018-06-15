@@ -9,7 +9,7 @@ router.get("/",function(req,res){
 
 //INDEX
 router.get("/myjournal",middleware.isLoggedIn,function(req,res){
-    Entry.find({"author.username":req.user.username},function(err,entries){
+    Entry.find({"author.id":req.user._id},function(err,entries){
         if(err){
             console.log(err);
         }else{
