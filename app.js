@@ -1,7 +1,10 @@
-var express             = require("express"),
-    app                 = express(),
-    bodyParser          = require("body-parser"),
-    mongoose            = require("mongoose");
+var express               = require("express"),
+    app                   = express(),
+    bodyParser            = require("body-parser"),
+    mongoose              = require("mongoose"),
+    passport              = require("passport"),
+    LocalStrategy         = require("passport-local"),
+    User                  = require("./models/user");
 
 mongoose.connect("mongodb://localhost/my_fish_journal");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -21,12 +24,32 @@ var entrySchema = new mongoose.Schema({
 
 var Entry = mongoose.model("Entry",entrySchema);
 
+//passport config/////////////////////////////////
+app.use(require("express-session")({
+    secret: "This is thakdjal;jf ls;djf sadfsaiuhdf asudfh",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use(function(req,res,next){
+   res.locals.currentUser = req.user;
+   next();
+});
+////////////////////////////////////////////////
+
+
 app.get("/",function(req,res){
     res.render("landing");
 })
 
 //INDEX
-app.get("/myjournal",function(req,res){
+app.get("/myjournal",isLoggedIn,function(req,res){
     Entry.find({},function(err,entries){
         if(err){
             console.log(err);
@@ -42,7 +65,7 @@ app.get("/myjournal/new",function(req,res){
 });
 
 //CREATE
-app.post("/myjournal",function(req,res){
+app.post("/myjournal",isLoggedIn,function(req,res){
     var title=req.body.title,
         date=req.body.date,
         flyType=req.body.flyType,
@@ -71,6 +94,70 @@ app.get("/myjournal/:id",function(req,res){
     });
 });
 
+// ====================
+// |   AUTH ROUTES    |
+// ====================
+
+
+// ====================
+// |     REGISTER     |
+// ====================
+
+app.get("/register",function(req,res){
+    res.render("register");
+});
+
+//Handle Sign Up Logic
+app.post("/register",function(req,res){
+    var newUser = new User({username:req.body.username});
+    User.register(newUser,req.body.password,function(err,user){
+        if(err){
+            console.log(err);
+            return res.render("register")
+        }
+        passport.authenticate("local")(req,res,function(){
+            res.redirect("/myjournal")
+        });
+    });
+});
+
+// ====================
+// |       LOGIN      |
+// ====================
+
+app.get("/login",function(req,res){
+   res.render("login"); 
+});
+
+app.post("/login",passport.authenticate("local",
+    {
+        successRedirect: "/myjournal",
+        failureRedirect: "/login"
+    }), function(req,res){
+    
+});
+
+// ====================
+// |       LOGOUT     |
+// ====================
+app.get("/logout",function(req,res){
+   req.logout();
+   res.redirect("/");
+});
+
+
+
+
+// ====================
+// |    MIDDLEWARE    |
+// ====================
+function isLoggedIn(req,res,next) {
+    if(req.isAuthenticated()){
+        return next();
+    } else {
+        res.redirect("/login");
+    }
+}
 
 app.listen(process.env.PORT, process.env.IP, function(){
    console.log("The Fishbook Server Has Started");
