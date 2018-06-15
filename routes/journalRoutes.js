@@ -9,7 +9,7 @@ router.get("/",function(req,res){
 
 //INDEX
 router.get("/myjournal",middleware.isLoggedIn,function(req,res){
-    Entry.find({},function(err,entries){
+    Entry.find({"author.username":req.user.username},function(err,entries){
         if(err){
             console.log(err);
         }else{
@@ -31,8 +31,12 @@ router.post("/myjournal",middleware.isLoggedIn,function(req,res){
         flyBreed=req.body.flyBreed,
         location=req.body.location,
         image=req.body.image,
-        description=req.body.description;
-    var newEntry = {title:title,date:date,flyType:flyType,flyBreed:flyBreed,location:location,image:image,description:description}
+        description=req.body.description,
+        author= {
+                    id: req.user._id,
+                    username:req.user.username
+                }
+    var newEntry = {title:title,date:date,flyType:flyType,flyBreed:flyBreed,location:location,image:image,description:description,author:author}
     Entry.create(newEntry,function(err,newEntry){
         if(err){
             console.log(err);

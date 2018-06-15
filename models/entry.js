@@ -7,7 +7,15 @@ var entrySchema = new mongoose.Schema({
     flyBreed: String,
     location: String,
     image: String,
-    description: String
+    description: String,
+    author:
+        {
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            },
+            username: String
+        }
 });
 
 module.exports = mongoose.model("Entry",entrySchema);
