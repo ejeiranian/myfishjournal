@@ -3,6 +3,10 @@
 <form action="/register" method="POST">
     <input type="text" name="username" placeholder = "username">
     <input type="password" name="password" placeholder = "password">
+    <select name="fishingType">
+        <option value="gear">Gear Fisher</option>
+        <option value="fly">Fly Fisher</option>
+    </select>
     <button>Submit</button>
 </form>
 <% include ./partials/footer %>

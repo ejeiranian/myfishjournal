@@ -18,7 +18,7 @@ router.get("/register",function(req,res){
 
 //Handle Sign Up Logic
 router.post("/register",function(req,res){
-    var newUser = new User({username:req.body.username});
+    var newUser = new User({username:req.body.username,fishingType:req.body.fishingType});
     User.register(newUser,req.body.password,function(err,user){
         if(err){
             console.log(err);
