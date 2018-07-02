@@ -1,8 +1,28 @@
 <% include ./partials/header %>
 
 <% var GM_API = process.env.GM_API %>
+<% var W_API = process.env.W_API %>
 
 <script>
+    function getWeather() {
+        let request = new XMLHttpRequest();
+        let url = "https://api.apixu.com/v1/history.json?key=<%=W_API%>&q=" + document.getElementById('location').value + "&dt=" + document.getElementById('date').value;
+        request.onreadystatechange = function() {
+          if (this.readyState === 4 && this.status === 200) {
+            response = JSON.parse(this.responseText);
+            getElements(response);
+          }else {
+            $("#weatherStatus").text("There was an error.")
+          }
+        }
+        request.open("GET", url, true);
+        request.send();
+        getElements = function(response) {
+            console.log(url)
+            $("#weatherStatus").text("The weather in " + response.location.name + " was " + response.forecast.forecastday[0].day.avgtemp_f + " degrees on average, with a high of " + response.forecast.forecastday[0].day.maxtemp_f + " farenheit") 
+        }
+    }
+
     $(document).ready(function(){
         var locSelector = document.getElementById('location')
         var dateSelector = document.getElementById('date')
@@ -18,11 +38,10 @@
             } else if (!locSelector.value && dateSelector.value) {
                $("#weatherStatus").text("Please choose a location") 
             } else {
-                $("#weatherStatus").text("OK") 
+                getWeather();
             }
         })
     });
-
 </script>
 <script>
       var map;
