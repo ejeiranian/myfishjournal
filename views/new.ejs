@@ -1,4 +1,7 @@
 <% include ./partials/header %>
+
+<% var GM_API = process.env.GM_API %>
+
 <script>
     $(document).ready(function(){
         var locSelector = document.getElementById('location')
@@ -57,8 +60,10 @@
       }
 
      }
+     
+
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=<%process.env.GM_API%>&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%GM_API%>&callback=initMap"
     async defer></script>
 <div class="container">
     <h1>New Post</h1>
