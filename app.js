@@ -7,7 +7,8 @@ var express               = require("express"),
     User                  = require("./models/user"),
     Entry                 = require("./models/entry"),
     indexRoutes           = require("./routes/index"),
-    journalRoutes         = require("./routes/journalRoutes");
+    journalRoutes         = require("./routes/journalRoutes"),
+    dotenv                = require('dotenv').config();
     
 mongoose.connect("mongodb://localhost/my_fish_journal");
 app.use(bodyParser.urlencoded({extended: true}));

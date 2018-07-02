@@ -1,7 +1,68 @@
 <% include ./partials/header %>
+<script>
+    $(document).ready(function(){
+        var locSelector = document.getElementById('location')
+        var dateSelector = document.getElementById('date')
+        $("#weatherStatus").text("Please choose a location and date")
+        $('#location').click(function() { 
+            $('#fishModal').modal('show'); 
+        });
+        $(".form-control").change(function() {
+            if (!locSelector.value && !dateSelector.value) {
+                $("#weatherStatus").text("Please choose a location and date")
+            } else if (locSelector.value && !dateSelector.value) {
+                $("#weatherStatus").text("Please choose a date")
+            } else if (!locSelector.value && dateSelector.value) {
+               $("#weatherStatus").text("Please choose a location") 
+            } else {
+                $("#weatherStatus").text("OK") 
+            }
+        })
+    });
+
+</script>
+<script>
+      var map;
+      var marker;
+      var infowindow;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 39.377941889089804, lng: -102.06715681091191},
+          zoom: 5
+        });
+       google.maps.event.addListener(map, 'click', function(event) {
+            placeMarker(event.latLng);
+            $('#location').attr('value', event.latLng.lat()+","+event.latLng.lng()).trigger("change");
+            marker.addListener('click', function() {
+            infowindow.open(map, marker);
+            })
+        });
+        
+        function placeMarker(location) {
+            if(marker) {
+                marker.setPosition(location);
+                marker.setTitle(location.lat() + ", " + location.lng())
+                infowindow.setContent(location.lat() + ", " + location.lng())
+                
+            } else {
+            marker = new google.maps.Marker({
+             position: location, 
+             map: map,
+             title: location.lat() + "," + location.lng()
+            });
+            infowindow = new google.maps.InfoWindow({
+            content: location.lat() + ", " + location.lng()
+        });
+        }
+      }
+
+     }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%process.env.GM_API%>&callback=initMap"
+    async defer></script>
 <div class="container">
     <h1>New Post</h1>
-    <form action="/myjournal" method="POST">
+    <form action="/myjournal" method="POST" id="newPost">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="inputTitle">Title</label>
@@ -34,6 +95,10 @@
                 <label for="image">Image URL</label>
                 <input type="text" class="form-control" id="image" placeholder="image url"  name="image">
             </div>
+            <div class="form-group col-md-6">
+                <label for="weatherStatus">Weather</label>
+                <p id="weatherStatus"></p>
+            </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-12">
@@ -44,4 +109,25 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
+
+<!--MODAL-->
+<div class="modal fade" id="fishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Click Where you Fished!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="map" style="width: 500px; height: 400px">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <% include ./partials/footer %>
