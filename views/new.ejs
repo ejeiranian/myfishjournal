@@ -7,19 +7,29 @@
     function getWeather() {
         let request = new XMLHttpRequest();
         let url = "https://api.apixu.com/v1/history.json?key=<%=W_API%>&q=" + document.getElementById('location').value + "&dt=" + document.getElementById('date').value;
+        let errorState
         request.onreadystatechange = function() {
           if (this.readyState === 4 && this.status === 200) {
             response = JSON.parse(this.responseText);
             getElements(response);
-          }else {
-            $("#weatherStatus").text("There was an error.")
+            errorState = false;
+          }else if(this.status >=400) {
+            errorState = true;
+            response = JSON.parse(this.responseText);
+            getElements(response);
+          }else{
+            $("#weatherStatus").text("Loading...")
           }
         }
         request.open("GET", url, true);
         request.send();
         getElements = function(response) {
-            console.log(url)
-            $("#weatherStatus").text("The weather in " + response.location.name + " was " + response.forecast.forecastday[0].day.avgtemp_f + " degrees on average, with a high of " + response.forecast.forecastday[0].day.maxtemp_f + " farenheit") 
+            if(!errorState) {
+                console.log(url)
+                $("#weatherStatus").text("The weather in " + response.location.name + " was " + response.forecast.forecastday[0].day.avgtemp_f + " degrees on average, with a high of " + response.forecast.forecastday[0].day.maxtemp_f + " farenheit") 
+            } else {
+                $("#weatherStatus").text("There was an error: " + response.error.message) 
+            }
         }
     }
 
